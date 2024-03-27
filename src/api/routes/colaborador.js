@@ -4,24 +4,6 @@ const router = express.Router();
 const db = require('../database');
 const verificarToken = require('./verificarToken');
 
-// Formato de saída desejado
-var options = {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    timeZoneName: 'short',
-    timeZone: 'America/Sao_Paulo'  // Fuso horário de Brasília
-};
-
-function converterDataRetorno(data) {
-    const dataRetorno = new Date(data);
-    return dataRetorno.toLocaleDateString('en-US', options);
-}
-
 function converterData(data) {
     if (data !== "" && data !== null) {
         const dataConvertida = new Date(data);

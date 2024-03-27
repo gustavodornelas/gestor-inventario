@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
-import "react-datepicker/dist/react-datepicker.css"
 import { toast } from "react-toastify"
 import api from "../../../services/api"
 import { ConfirmToast } from "../../../components/customToasts"
 import Loading from "../../../components/Loading"
-import { StyledDatePicker, StyledFooter, StyledForm, StyledGroup, StyledLabel, StyledOption, StyledSelect, StyledButton, StyledInput, StyledFormBody, StyledFormatedNumber } from "../../../style/formStyles"
+import { StyledDatePicker, StyledFooter, StyledForm, StyledGroup, StyledLabel, StyledOption, StyledSelect, StyledButton, StyledInput, StyledFormBody, StyledFormatedNumber, StyledFormatedTelephone } from "../../../style/formStyles"
 import { converterData } from "../../../services/formUtils"
 
 export default function CadastrarColaborador() {
@@ -30,7 +29,7 @@ export default function CadastrarColaborador() {
         { name: "setor", label: "Setor", type: "text" },
         { name: "sexo", label: "Sexo", type: "text" },
         { name: "data_nascimento", label: "Data de Nascimento", type: "date" },
-        { name: "telefone", label: "Telefone", type: "formatedNumber", mask: "(##) ####-####", maskLength: "15" },
+        { name: "telefone", label: "Telefone", type: "formatedTelephone" },
         { name: "ramal", label: "Ramal", type: "text" },
         { name: "data_integracao", label: "Data de Integração", type: "date", minDate: formData.data_nascimento },
         { name: "data_desligamento", label: "Data de Desligamento", type: "date", minDate: formData.data_integracao }
@@ -112,6 +111,7 @@ export default function CadastrarColaborador() {
     function handleInputChange(e) {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
+        console.log(formData)
     }
 
     const handleDateChange = (date, name) => {
@@ -226,11 +226,25 @@ export default function CadastrarColaborador() {
                                     name={field.name}
                                     value={formData[field.name] ? formData[field.name] : ""}
                                     type="text"
-                                    format={formData[field.mask]}
                                     placeholder={field.placeholder}
                                     onChange={handleInputChange}
                                     required={field.required}
+                                    format={field.mask}
+
                                 />
+                            ) : field.type === "formatedTelephone" ? (
+                                <StyledFormatedTelephone
+                                    name={field.name}
+                                    value={formData[field.name]}
+                                    type="text"
+                                    placeholder={field.placeholder}
+                                    onChange={handleInputChange}
+                                    required={field.required}
+                                    separaNono
+                                    temDDD
+                                    separaDDD
+
+                                    />
                             ) : (
                                 <StyledInput
                                     name={field.name}

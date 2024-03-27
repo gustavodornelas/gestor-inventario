@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 import { theme } from "./globalStyles";
 import ReactDatePicker from "react-datepicker";
 import { PatternFormat } from 'react-number-format';
+import TelefoneBrasileiroInput from "react-telefone-brasileiro/dist/TelefoneBrasileiroInput";
 
 
 const inputStyles = css`
@@ -63,6 +64,10 @@ export const StyledInput = styled.input`
 export const StyledFormatedNumber = styled(PatternFormat)`
   ${inputStyles}
 `;
+
+export const StyledFormatedTelephone = styled(TelefoneBrasileiroInput)`
+    ${inputStyles}
+`
 
 export const StyledDatePicker = styled(ReactDatePicker)`
     ${inputStyles}
