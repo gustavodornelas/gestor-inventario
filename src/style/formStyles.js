@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { theme } from "./globalStyles";
 import ReactDatePicker from "react-datepicker";
+import { PatternFormat } from 'react-number-format';
 
 
 const inputStyles = css`
@@ -39,7 +40,6 @@ export const StyledFormBody = styled.div`
     overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 1rem;
 `;
 
 export const StyledGroup = styled.div`
@@ -60,6 +60,13 @@ export const StyledInput = styled.input`
     ${inputStyles}
 `;
 
+export const StyledFormatedNumber = styled(PatternFormat)`
+  ${inputStyles}
+`;
+
+export const StyledDatePicker = styled(ReactDatePicker)`
+    ${inputStyles}
+`;
 
 export const StyledSelect = styled.select`
     ${inputStyles}
@@ -72,11 +79,6 @@ export const StyledSelect = styled.select`
 
 export const StyledOption = styled.option`
     color: ${theme.textcolor};
-`;
-
-
-export const StyledDatePicker = styled(ReactDatePicker)`
-    ${inputStyles}
 `;
 
 export const StyledButton = styled.button`

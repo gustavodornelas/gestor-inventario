@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 import api from "../../../services/api"
 import { ConfirmToast } from "../../../components/customToasts"
 import Loading from "../../../components/Loading"
-import { StyledDatePicker, StyledFooter, StyledForm, StyledGroup, StyledLabel, StyledOption, StyledSelect, StyledButton, StyledInput, StyledFormBody } from "../../../style/formStyles"
+import { StyledDatePicker, StyledFooter, StyledForm, StyledGroup, StyledLabel, StyledOption, StyledSelect, StyledButton, StyledInput, StyledFormBody, StyledFormatedNumber } from "../../../style/formStyles"
 import { converterData } from "../../../services/formUtils"
 
 export default function CadastrarColaborador() {
@@ -23,17 +23,17 @@ export default function CadastrarColaborador() {
 
     const colaboradoresFormFields = [
         { name: "nome", label: "Nome", type: "text", required: true },
-        { name: "cpf", label: "CPF", type: "text", required: true },
+        { name: "cpf", label: "CPF", type: "formatedNumber", mask: "###.###.###-##", required: true },
         { name: "id_empresa", label: "Empresa", type: "select", options: empresas, labelKey: "nome_fantasia" },
         { name: "id_filial", label: "Filial", type: "select", options: filiaisFiltradas, labelKey: "nome_fantasia", filter: formData.id_empresa },
         { name: "cargo", label: "Cargo", type: "text" },
         { name: "setor", label: "Setor", type: "text" },
         { name: "sexo", label: "Sexo", type: "text" },
-        { name: "data_nascimento", label: "Data de Nascimento", type: "datepicker" },
-        { name: "telefone", label: "Telefone", type: "text" },
+        { name: "data_nascimento", label: "Data de Nascimento", type: "date" },
+        { name: "telefone", label: "Telefone", type: "formatedNumber", mask: "(##) ####-####", maskLength: "15" },
         { name: "ramal", label: "Ramal", type: "text" },
-        { name: "data_integracao", label: "Data de Integração", type: "datepicker", minDate: formData.data_nascimento },
-        { name: "data_desligamento", label: "Data de Desligamento", type: "datepicker", minDate: formData.data_integracao }
+        { name: "data_integracao", label: "Data de Integração", type: "date", minDate: formData.data_nascimento },
+        { name: "data_desligamento", label: "Data de Desligamento", type: "date", minDate: formData.data_integracao }
     ]
 
     // Carregando as empresas e filiais para o Select
@@ -119,6 +119,7 @@ export default function CadastrarColaborador() {
         console.log(formData)
     }
 
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -181,9 +182,10 @@ export default function CadastrarColaborador() {
                             </StyledLabel>
 
                             {field.type === "select" ? (
+
                                 <StyledSelect
                                     name={field.name}
-                                    value={formData[field.name] !== 'null' ? formData[field.name] : 0}
+                                    value={formData[field.name]}
                                     onChange={handleInputChange}
                                     required={field.required}
                                     // eslint-disable-next-line eqeqeq
@@ -198,13 +200,13 @@ export default function CadastrarColaborador() {
                                     } />
                                     {field.options.map(option => (
                                         // eslint-disable-next-line eqeqeq
-                                        <StyledOption key={option.id} value={option.id} selected={option.id == field.name ? field.name : false }>
+                                        <StyledOption key={option.id} value={option.id} selected={option.id == field.name ? field.name : false}>
                                             {option[field.labelKey]}
                                         </StyledOption>
                                     ))}
                                 </StyledSelect>
 
-                            ) : field.type === "datepicker" ? (
+                            ) : field.type === "date" ? (
                                 <StyledDatePicker
                                     name={field.name}
                                     value={formData[field.name]}
@@ -218,10 +220,21 @@ export default function CadastrarColaborador() {
                                     minDate={field.minDate}
                                     autoComplete="off"
                                 />
+
+                            ) : field.type === "formatedNumber" ? (
+                                <StyledFormatedNumber
+                                    name={field.name}
+                                    value={formData[field.name] ? formData[field.name] : ""}
+                                    type="text"
+                                    format={formData[field.mask]}
+                                    placeholder={field.placeholder}
+                                    onChange={handleInputChange}
+                                    required={field.required}
+                                />
                             ) : (
                                 <StyledInput
                                     name={field.name}
-                                    value={formData[field.name] ? formData[field.name] : ""}
+                                    value={formData[field.name]}
                                     type={field.type}
                                     placeholder={field.label}
                                     onChange={handleInputChange}
