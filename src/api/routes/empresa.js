@@ -40,7 +40,7 @@ router.get('/', verificarToken, (req, res) => {
 });
 
 router.get('/resumo', verificarToken, (req, res) => {
-    const sql = 'SELECT nome_fantasia as nome, cnpj, inscricao_estadual from empresa';
+    const sql = 'SELECT id, nome_fantasia as nome, cnpj, inscricao_estadual from empresa';
     db.query(sql, (err, result) => {
         if (err) {
             throw err;

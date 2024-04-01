@@ -38,6 +38,20 @@ router.get('/', verificarToken, (req, res) => {
     });
 });
 
+router.get('/resumo', verificarToken, (req, res) => {
+    const sql = 'SELECT e.id, e.tipo_equipamento, e.nome, e.descricao, em.razao_social as empresa, f.razao_social as filial, c.nome as colaborador, e.situacao ' +
+                'FROM equipamento as e ' + 
+                'inner join empresa as em on e.id_empresa = em.id ' +
+                'inner join filial_empresa as f on e.id_filial = f.id ' +
+                'inner join colaborador as c on e.id_colaborador = c.id ';
+    db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 
 // Buscar um equipamento
 router.get('/:id', verificarToken, (req, res) => {

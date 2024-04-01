@@ -6,16 +6,16 @@ import Tabela from "../../../components/Tabela";
 import { ConfirmToast } from "../../../components/customToasts";
 import api from "../../../services/api";
 
-export default function ExibirColaborador() {
-    const [colaboradores, setColaboradores] = useState([]);
+export default function ExibirEquipamentos() {
+    const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const fetchData = () => {
         api
-            .get('colaborador/resumo')
+            .get('equipamento/resumo')
             .then((res) => {
-                setColaboradores(res.data);
+                setEquipamentos(res.data);
             })
             .catch((err) => {
                 toast.error(err.response.data);
@@ -26,16 +26,16 @@ export default function ExibirColaborador() {
     };
 
     const handleEdit = (id) => {
-        navigate(`/colaboradores/cadastrar/${id}`);
+        navigate(`/equipamentos/cadastrar/${id}`);
     };
 
     const handleAdd = () => {
-        navigate(`/colaboradores/cadastrar`);
+        navigate(`/equipamentos/cadastrar`);
     };
 
     const deleteItem = async (id) => {
         try {
-            const res = await api.delete(`/colaborador/${id}`);
+            const res = await api.delete(`/equipamento/${id}`);
             return res.data;
         } catch (err) {
             throw err;
@@ -65,9 +65,9 @@ export default function ExibirColaborador() {
     };
 
     const handleDelete = async (ids) => {
-        const itemsToDelete = await colaboradores.filter((item) => ids.includes(item.id));
+        const itemsToDelete = await equipamentos.filter((item) => ids.includes(item.id));
 
-        const confirmationMessage = `Deseja realmente deletar os(as) colaborador(es) selecionados?`;
+        const confirmationMessage = `Deseja realmente deletar os equipamentos selecionados?`;
 
         toast(
             <ConfirmToast
@@ -92,6 +92,6 @@ export default function ExibirColaborador() {
     }
 
     return (
-        <Tabela dados={colaboradores} titulo={'Colaboradores'} onAdd={handleAdd} onEdit={handleEdit} onDelete={handleDelete} />
+        <Tabela dados={equipamentos} titulo={'Equipamentos'} onAdd={handleAdd} onEdit={handleEdit} onDelete={handleDelete} />
     );
 };

@@ -6,16 +6,16 @@ import Tabela from "../../../components/Tabela";
 import { ConfirmToast } from "../../../components/customToasts";
 import api from "../../../services/api";
 
-export default function ExibirColaborador() {
-    const [colaboradores, setColaboradores] = useState([]);
+export default function ExibirEmpresas() {
+    const [empresas, setEmpresas] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const fetchData = () => {
         api
-            .get('colaborador/resumo')
+            .get('empresa/resumo')
             .then((res) => {
-                setColaboradores(res.data);
+                setEmpresas(res.data);
             })
             .catch((err) => {
                 toast.error(err.response.data);
@@ -26,16 +26,16 @@ export default function ExibirColaborador() {
     };
 
     const handleEdit = (id) => {
-        navigate(`/colaboradores/cadastrar/${id}`);
+        navigate(`/empresas/cadastrar/${id}`);
     };
 
     const handleAdd = () => {
-        navigate(`/colaboradores/cadastrar`);
+        navigate(`/empresas/cadastrar`);
     };
 
     const deleteItem = async (id) => {
         try {
-            const res = await api.delete(`/colaborador/${id}`);
+            const res = await api.delete(`/empresa/${id}`);
             return res.data;
         } catch (err) {
             throw err;
@@ -43,6 +43,7 @@ export default function ExibirColaborador() {
     };
 
     const deleteItems = async (items) => {
+        console.log(items)
         const deletePromises = items.map(async (item) => {
             try {
                 const res = await deleteItem(item.id);
@@ -65,9 +66,9 @@ export default function ExibirColaborador() {
     };
 
     const handleDelete = async (ids) => {
-        const itemsToDelete = await colaboradores.filter((item) => ids.includes(item.id));
+        const itemsToDelete = await empresas.filter((item) => ids.includes(item.id));
 
-        const confirmationMessage = `Deseja realmente deletar os(as) colaborador(es) selecionados?`;
+        const confirmationMessage = `Deseja realmente deletar as Empresas selecionadas?`;
 
         toast(
             <ConfirmToast
@@ -92,6 +93,6 @@ export default function ExibirColaborador() {
     }
 
     return (
-        <Tabela dados={colaboradores} titulo={'Colaboradores'} onAdd={handleAdd} onEdit={handleEdit} onDelete={handleDelete} />
+        <Tabela dados={empresas} titulo={'Empresas'} onAdd={handleAdd} onEdit={handleEdit} onDelete={handleDelete} />
     );
 };
