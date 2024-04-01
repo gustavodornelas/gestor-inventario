@@ -8,57 +8,39 @@ import Loading from "../../../components/Loading"
 import { StyledDatePicker, StyledFooter, StyledForm, StyledGroup, StyledLabel, StyledOption, StyledSelect, StyledButton, StyledInput, StyledFormBody, StyledFormatedNumber, StyledFormatedTelephone } from "../../../style/formStyles"
 import { converterData } from "../../../services/formUtils"
 
-export default function CadastrarEquipamento() {
+export default function CadastrarFilial() {
     const { id } = useParams() // Recupera o id da URL
     const [loading, setLoading] = useState(true)
     const [loadingSelects, setLoadingSelects] = useState(true)
-    const [equipamento, setEquipamento] = useState(null)
-    const [empresas, setEmpresas] = useState([])
-    const [filiais, setFiliais] = useState([])
-    const [colaboradores, setColaboradores] = useState([])
-    const [filiaisFiltradas, setFiliaisFiltradas] = useState([])
-    const [colaboradoresFiltrados, setColaboradoresFiltrados] = useState([])
+    const [filial, setFilial] = useState(null)
+    const [empresa, setEmpresas] = useState([])
     const [formData, setFormData] = useState({})
 
     const navigate = useNavigate()
 
-    const EquipamentoFormFields = [
-        { name: "tipo_equipamento", label: "Tipo de Equipamento", type: "text" },
-        { name: "nome", label: "Nome", type: "text" },
-        { name: "descricao", label: "Descrição", type: "text" },
-        { name: "id_empresa", label: "Empresa", type: "select", options: empresas, labelKey: "nome_fantasia" },
-        { name: "id_filial", label: "Filial", type: "select", options: filiaisFiltradas, labelKey: "nome_fantasia" },
-        { name: "situacao", label: "Situação", type: "text" },
-        { name: "data_aquisicao", label: "Data da Aquisição", type: "date" },
-        { name: "metodo_aquisicao", label: "Metódo da Aquisição", type: "text" },
-        { name: "numero_nota_fiscal", label: "Número da Nota Fiscal", type: "text" },
-        { name: "fornecedor", label: "Fornecedor", type: "text" },
-        { name: "contrato", label: "Contrato", type: "text" },
-        { name: "valor_equipamento", label: "Valor do Equipamento", type: "text" },
-        { name: "id_colaborador", label: "Colaborador", type: "select", options: colaboradoresFiltrados, labelKey: "nome" },
-        { name: "data_inicial_colaborador", label: "Data inicial do Colaborador", type: "date", minDate: formData.data_aquisicao },
-        { name: "data_baixa", label: "Data da Baixa", type: "date", minDate: formData.data_aquisicao },
-        { name: "motivo_baixa", label: "Motivo da Baixa", type: "text" },
-        { name: "marca", label: "Marca", type: "text" },
-        { name: "modelo", label: "Modelo", type: "text" },
-        { name: "numero_serie", label: "Número de Série", type: "text" },
-        { name: "sistema_operacional", label: "Sistema Operacional", type: "text" },
-        { name: "disco_SSD", label: "Disco / SSD", type: "text" },
-        { name: "memoria", label: "Memoria", type: "text" },
-        { name: "processador", label: "Processador", type: "text" }
+    const filiaisFormFields = [
+        { name: "razao_social", label: "Razão Social", type: "text", required: true },
+        { name: "cnpj", label: "CNPJ", type: "formatedNumber", mask: '##.###.###/####-##', required: true },
+        { name: "nome_fantasia", label: "Nome Fantasia", type: "text" },
+        { name: 'id_empresa', label: "Empresa", type: "select", options: empresa, labelKey: "nome_fantasia" },
+        { name: "inscricao_estadual", label: "Inscrição Estadual", type: "text" },
+        { name: "inscricao_municipal", label: "inscricao Municipal", type: "text" },
+        { name: "cep", label: "CEP", type: "formatedNumber", mask: '#####-###' },
+        { name: "logradouro", label: "Logradouro", type: "text" },
+        { name: "numero_endereco", label: "Número", type: "text" },
+        { name: "complemento", label: "Complemento", type: "text" },
+        { name: "bairro", label: "Bairro", type: "text" },
+        { name: "cidade", label: "Cidade", type: "text" },
+        { name: "estado", label: "Estado", type: "text" },
+        { name: "telefone", label: "Telefone", type: "formatedTelephone" },
+        { name: "email", label: "E-mail", type: "email" },
     ];
 
-    // Carregando as empresas, filiais e colaboradores para o Select
+    // Carregando as empresas e filiais para o Select
     useEffect(() => {
-        Promise.all([
-            api.get('empresa'),
-            api.get('filial'),
-            api.get('colaborador')
-        ])
-            .then(([empresasResponse, filiaisResponse, colaboradoresResponse]) => {
-                setEmpresas(empresasResponse.data);
-                setFiliais(filiaisResponse.data);
-                setColaboradores(colaboradoresResponse.data);
+            api.get('empresa')
+            .then(response => {
+                setEmpresas(response.data);
                 setLoadingSelects(false);
             })
             .catch(error => {
@@ -66,26 +48,10 @@ export default function CadastrarEquipamento() {
             });
     }, []);
 
-    // Filtrar as filiais quando o formData.id_empresa mudar
-    useEffect(() => {
-        // eslint-disable-next-line eqeqeq
-        const filtro = filiais.filter(filial => filial.id_empresa == formData.id_empresa);
-        setFiliaisFiltradas(filtro);
-
-    }, [formData.id_empresa, filiais]);
-
-    // Filtrar os Colaboradores quando o formData.id_filial mudar
-    useEffect(() => {
-        // eslint-disable-next-line eqeqeq
-        const filtro = colaboradores.filter(colaborador => colaborador.id_filial == formData.id_filial);
-        setColaboradoresFiltrados(filtro);
-
-    }, [formData.id_filial, colaboradores]);
-
-    // Carregando os Colaboradores em caso de edição
+    // Carregando as empresas em caso de edição
     useEffect(() => {
         if (id) {
-            api.get('equipamento/' + id)
+            api.get('filial/' + id)
                 .then(async response => {
                     const dados = response.data
 
@@ -93,6 +59,7 @@ export default function CadastrarEquipamento() {
                     const chavesComData = todasAsChaves.filter((chave) =>
                         chave.includes('data')
                     )
+
 
                     // Convertendo dadas para o formato do campo
                     if (chavesComData.length > 0) {
@@ -105,7 +72,7 @@ export default function CadastrarEquipamento() {
                         )
                     }
 
-                    setEquipamento(dados)
+                    setFilial(dados)
                 })
                 .catch(error => {
                     toast.error(error.message)
@@ -117,16 +84,16 @@ export default function CadastrarEquipamento() {
 
     // Preenchendo os campos do formulário com os dados em caso de edição
     useEffect(() => {
-        if (equipamento) {
+        if (filial) {
             const newFormData = {}
-            EquipamentoFormFields.forEach((field) => {
-                newFormData[field.name] = equipamento[field.name]
+            filiaisFormFields.forEach((field) => {
+                newFormData[field.name] = filial[field.name]
             })
             setFormData(newFormData)
             setLoading(false)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [equipamento])
+    }, [filial])
 
 
     // Funções de controle de Formulário
@@ -145,44 +112,36 @@ export default function CadastrarEquipamento() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        if (!formData.id_empresa) {
-            formData.id_filial = null
-        }
-
-        if (!formData.id_filial) {
-            formData.id_colaborador = null
-        }
-
         // Verificar se está em modo de edição ou cadastro
-        if (equipamento !== null) {
+        if (filial !== null) {
             // Modo de edição
-            await api.put(`/equipamento/` + id, formData)
+            await api.put(`/filial/` + id, formData)
                 .then((res) => {
                     toast.success(res.data)
-                    navigate(`/equipamentos`)
+                    navigate(`/filiais`)
                 })
                 .catch(err => toast.error(err.response.data))
         } else {
             // Modo de cadastro
-            await api.post(`/equipamento/`, formData)
+            await api.post(`/filial/`, formData)
                 .then((res) => {
                     toast.success(res.data)
-                    navigate(`/equipamentos`)
+                    navigate(`/filiais`)
                 })
                 .catch(err => toast.error(err.response.data))
         }
     }
 
     const deleteItem = () => {
-        api.delete(`/equipamento/` + id).then((res) => {
+        api.delete(`/filial/` + id).then((res) => {
             toast.success(res.data)
-            navigate(`/equipamento`)
+            navigate(`/filiais`)
         })
             .catch(err => toast.error(err.response.data))
     }
 
     const handleDelete = () => {
-        const msg = `Deseja realmente deletar o equipamento ` + equipamento.nome + "?"
+        const msg = `Deseja realmente deletar a Filial ` + filial.nome_fantasia + "?"
 
         toast.dismiss()
         toast(<ConfirmToast message={msg} onConfirm={deleteItem} />, {
@@ -197,10 +156,10 @@ export default function CadastrarEquipamento() {
 
     return (
         <>
-            <h2> Cadastro de Equipamentos </h2>
+            <h2> Cadastro de Filiais </h2>
             <StyledForm onSubmit={handleSubmit}>
                 <StyledFormBody>
-                    {EquipamentoFormFields.map(field => (
+                    {filiaisFormFields.map(field => (
                         <StyledGroup key={field.name}>
                             <StyledLabel>
                                 {field.label}
@@ -208,7 +167,6 @@ export default function CadastrarEquipamento() {
                             </StyledLabel>
 
                             {field.type === "select" ? (
-
                                 <StyledSelect
                                     name={field.name}
                                     value={formData[field.name]}
@@ -218,8 +176,8 @@ export default function CadastrarEquipamento() {
                                     disabled={field.options == 0 ? true : false}
                                 >
                                     <StyledOption value="" disabled hidden selected={
-                                        equipamento ? (
-                                            equipamento[field.name] ? false : true
+                                        filial ? (
+                                            filial[field.name] ? false : true
                                         ) : (
                                             true
                                         )
@@ -270,7 +228,7 @@ export default function CadastrarEquipamento() {
                                     temDDD
                                     separaDDD
 
-                                />
+                                    />
                             ) : (
                                 <StyledInput
                                     name={field.name}
@@ -286,10 +244,10 @@ export default function CadastrarEquipamento() {
                 </StyledFormBody>
                 <StyledFooter>
                     <StyledButton type="submit">
-                        {equipamento !== null ? `Editar equipamento` : `Cadastrar equipamento`}
+                        {filial !== null ? `Editar filial` : `Cadastrar filial`}
                     </StyledButton>
-                    <StyledButton color="secondary" type="button" disabled={equipamento === null} onClick={handleDelete}>
-                        Deletar equipamento
+                    <StyledButton color="secondary" type="button" disabled={filial === null} onClick={handleDelete}>
+                        Deletar filial
                     </StyledButton>
                 </StyledFooter>
             </StyledForm>

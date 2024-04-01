@@ -39,6 +39,19 @@ router.get('/', verificarToken, (req, res) => {
     });
 });
 
+// Listar todas as filiais
+router.get('/resumo', verificarToken, (req, res) => {
+    const sql = 'SELECT f.id, f.nome_fantasia as nome, e.nome_fantasia as empresa, f.cnpj, f.cidade, f.telefone ' +
+                'from filial_empresa as f ' +
+                'inner join empresa as e on f.id_empresa = e.id';
+    db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 // Listar uma unica filial
 router.get('/:id', verificarToken, (req, res) => {
 

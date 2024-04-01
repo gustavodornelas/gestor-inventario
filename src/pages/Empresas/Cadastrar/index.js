@@ -117,7 +117,7 @@ export default function CadastrarEmpresa() {
     }
 
     const handleDelete = () => {
-        const msg = `Deseja realmente deletar a Empresa ` + empresa.nome + "?"
+        const msg = `Deseja realmente deletar a Empresa ` + empresa.nome_fantasia + "?"
 
         toast.dismiss()
         toast(<ConfirmToast message={msg} onConfirm={deleteItem} />, {

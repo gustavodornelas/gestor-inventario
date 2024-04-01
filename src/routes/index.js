@@ -8,9 +8,6 @@ import Home from "../pages/home";
 
 import Login from '../pages/login';
 import { PrivateRoutes } from './privateRoutes';
-import Exibir from '../pages/Exibir';
-import Cadastrar from '../pages/Cadastrar';
-
 
 import ExibirColaboradores from '../pages/Colaboradores/Listar'
 import CadastrarColaborador from '../pages/Colaboradores/Cadastrar';
@@ -21,27 +18,11 @@ import CadastrarEmpresa from '../pages/Empresas/Cadastrar';
 import CadastrarEquipamento from '../pages/Equipamentos/Cadastrar';
 import ExibirEquipamentos from '../pages/Equipamentos/Listar';
 
+import CadastrarFilial from '../pages/Filiais/Cadastrar';
+import ExibirFiliais from '../pages/Filiais/Listar';
+
 
 const AppRoutes = () => {
-
-    const filiaisFormFields = [
-        { name: "razao_social", label: "Razão Social", type: "text", required: true },
-        { name: "cnpj", label: "CNPJ", type: "text", required: true },
-        { name: "nome_fantasia", label: "Nome Fantasia", type: "text" },
-        { name: 'id_empresa', label: "Empresa", type: "select", options: [], apiRoute: 'empresa', labelKey: "nome_fantasia" },
-        { name: "inscricao_estadual", label: "Inscrição Estadual", type: "text" },
-        { name: "inscricao_municipal", label: "inscricao Municipal", type: "text" },
-        { name: "cep", label: "CEP", type: "text" },
-        { name: "logradouro", label: "Logradouro", type: "text" },
-        { name: "numero_endereco", label: "Número", type: "text" },
-        { name: "complemento", label: "Complemento", type: "text" },
-        { name: "bairro", label: "Bairro", type: "text" },
-        { name: "cidade", label: "Cidade", type: "text" },
-        { name: "estado", label: "Estado", type: "text" },
-        { name: "telefone", label: "Telefone", type: "text" },
-        { name: "email", label: "E-mail", type: "text" },
-    ];
-
 
     return (
         <Router>
@@ -111,18 +92,18 @@ const AppRoutes = () => {
                 <Route exact path="/filiais" element={<PrivateRoutes />} >
                     <Route
                         exact path='/filiais'
-                        element={<Exibir title="filiais" apiRoute="filial" />} />
+                        element={<ExibirFiliais />} />
                 </Route>
 
                 <Route exact path="/filiais/cadastrar" element={<PrivateRoutes />} >
                     <Route
                         exact path='/filiais/cadastrar'
-                        element={<Cadastrar title="filiais" apiRoute="filial" formFields={filiaisFormFields} />} />
+                        element={<CadastrarFilial />} />
                 </Route>
                 <Route exact path="/filiais/cadastrar/:id" element={<PrivateRoutes />} >
                     <Route
                         exact path='/filiais/cadastrar/:id'
-                        element={<Cadastrar title="filiais" apiRoute="filial" formFields={filiaisFormFields} />} />
+                        element={<CadastrarFilial />} />
                 </Route>
 
             </Routes>
